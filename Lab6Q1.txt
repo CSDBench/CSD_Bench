@@ -1,0 +1,134 @@
+using System;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp1
+{
+    class program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                Customer customer = new Customer();
+                Customer customer1 = new Customer(000, "sdf", "asdfhj", "qwerty", 4567);
+                Console.WriteLine("enter customer ID");
+                customer1.CustomerID1=Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("enter customer name");
+                customer1.CustomerName1 = Console.ReadLine();
+                Console.WriteLine("enter address name");
+                customer1.Address1 = (Console.ReadLine());
+                Console.WriteLine("enter city name");
+                customer1.City1 = (Console.ReadLine());
+                Console.WriteLine("enter phone no.");
+                customer1.CustomerID1 = Convert.ToInt32(Console.ReadLine());
+
+
+
+
+
+                Console.WriteLine("enter credit limit");
+                customer1.CreditLimit = Convert.ToInt32(Console.ReadLine());
+            }
+            catch (InvalidCreditLimit)
+            {
+                Console.WriteLine("credit limit is above 50000");
+            }
+
+
+        }
+    }
+    class Customer
+    {
+        private int CustomerID;
+
+        private string CustomerName;
+        private string Address;
+        private string City;
+        private int _phone;
+        private int _creditLimit;
+
+        public int CustomerID1 { get => CustomerID; set => CustomerID = value; }
+        public string CustomerName1 { get => CustomerName; set => CustomerName = value; }
+        public string Address1 { get => Address; set => Address = value; }
+        public string City1 { get => City; set => City = value; }
+        public int Phone1
+        {
+            get
+            {
+                return _phone;
+
+            }
+            set
+            {
+                if (value == 10)
+                {
+                    _phone = value;
+                }
+                else
+                    throw new InvalidStringLimit("error in string length");
+            }
+        }
+            
+        public int CreditLimit
+        {
+            get
+            {
+                return _creditLimit;
+            }
+
+
+            set
+            {
+                if (value <= 50000)
+                {
+                    _creditLimit = value;
+                }
+                else
+                    throw new InvalidCreditLimit("credit limit should be above 50000");
+            }
+        }
+        public Customer() //default constructor
+        {
+        }
+        public Customer(int cusID, string cusname, string add, string city, int phone)
+        {
+            CustomerID1 = cusID;
+            CustomerName1 = cusname;
+            Address1 = add;
+
+            City1 = city;
+            Phone1 = phone;
+
+
+        }
+
+
+
+
+
+
+    }
+    public class InvalidCreditLimit : Exception
+    {
+        public InvalidCreditLimit(string message) : base(message)
+        {
+            Console.WriteLine("creditLimit is above 50000");
+        } }
+        public class InvalidStringLimit : Exception
+        {
+            public InvalidStringLimit(string message): base(message)
+                {
+
+            Console.WriteLine("error in string length");
+                }
+        }
+        
+        
+    }
+
+
+
