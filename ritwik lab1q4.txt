@@ -1,0 +1,53 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace lab1q4
+{
+    class Program 
+    {
+        public int rollNo;
+        public string studentname;
+        public byte age;
+        public char gender;
+        public DateTime dateofbirth;
+        public string address;
+        public float percentage;
+
+
+
+
+
+        static void Main(string[] args)
+        {
+            Program program = new Program();
+            program.rollNo = 25;
+            program.studentname = "Ritwik";
+            program.age = 22;
+            program.gender = 'M';
+            program.dateofbirth = DateTime.Parse("1997-11-29");
+            program.address = "varanasi";
+            program.percentage = 89;
+
+
+
+
+
+
+
+
+
+            Console.WriteLine("enter roll no" + program.rollNo);
+            Console.WriteLine("enter student name" + program.studentname);
+            Console.WriteLine("enter age" + program.age);
+            Console.WriteLine("enter gender" + program.gender);
+            Console.WriteLine("enter date of birth" + program.dateofbirth);
+            Console.WriteLine("enter address" + program.address);
+            Console.WriteLine("enter percentage" + program.percentage);
+
+
+        } 
+    }
+}
