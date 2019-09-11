@@ -1,0 +1,97 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace lab3q1
+{
+    class Participant
+    {
+        private int employeeID;
+        private string employeeName;
+        private string companyName;
+        private int foundationMarks;
+        private int webBasicMarks;
+        private int dotnetMarks;
+        private int totalMarks;
+        private int obtainedMarks;
+        private int percentage;
+
+        public int EmployeeID { get => employeeID; set => employeeID = value; }
+        
+        public int FoundationMarks { get => foundationMarks; set => foundationMarks = value; }
+        public int WebBasicMarks { get => webBasicMarks; set => webBasicMarks = value; }
+        public int DotnetMarks { get => dotnetMarks; set => dotnetMarks = value; }
+        public int TotalMarks { get => totalMarks; set => totalMarks = value; }
+        public int ObtainedMarks { get => obtainedMarks; set => obtainedMarks = value; }
+        public int Percentage { get => percentage; set => percentage = value; }
+        public string EmployeeName { get => employeeName; set => employeeName = value; }
+        public string CompanyName { get => companyName; set => companyName = value; }
+
+        class Program
+        {
+            static void Main(string[] args)
+            {
+                Participant participant = new Participant();
+                Console.WriteLine("enter employee id");
+                participant.EmployeeID = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("enter employee name");
+                participant.employeeName = Console.ReadLine();
+                Console.WriteLine("enter companyName");
+                participant.companyName = Console.ReadLine();
+
+                
+                Console.WriteLine("enter dotnet marks");
+                participant.dotnetMarks = Convert.ToInt32(Console.ReadLine());
+               
+                Console.WriteLine("enter web basic marks");
+                participant.webBasicMarks = Convert.ToInt32(Console.ReadLine());
+                
+                Console.WriteLine("enter foundation marks");
+                participant.foundationMarks = Convert.ToInt32(Console.ReadLine());
+
+                participant.totalMarks = 300;
+                
+                participant.ObtainedMarks = participant.dotnetMarks + participant.webBasicMarks + participant.foundationMarks;
+
+
+                participant.percentage = participant.ObtainedMarks / participant.totalMarks * 100;
+
+
+                Console.WriteLine("employee id is" + participant.EmployeeID);
+
+                Console.WriteLine("employee name is" + participant.employeeName);
+
+                Console.WriteLine("company NAME IS" + participant.companyName);
+
+                Console.WriteLine("dotnet marks" + participant.dotnetMarks);
+
+                Console.WriteLine("web basic marks is" + participant.webBasicMarks);
+
+                Console.WriteLine("foundation marks is" + participant.foundationMarks);
+
+                Console.WriteLine("obtained marks is" + participant.obtainedMarks);
+
+                Console.WriteLine("total marks is" + participant.totalMarks);
+                Console.WriteLine("percentage is" + participant.percentage);
+                Console.ReadKey();
+
+            }
+        
+
+
+
+
+
+        }
+    }
+}
+            
+            
+                 
+        
+    
+
+
+

@@ -1,0 +1,71 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace lab1q2
+{
+    class ArithmaticOperations
+    {
+        public int a, b;
+        public double c;
+
+        public double add()
+        {
+            c = a + b;
+            return c;
+        }
+        public double sub()
+        {
+            c = a - b;
+            return c;
+        }
+        public double product()
+        {
+            c = a * b;
+            return c;
+        }
+        public double divide()
+        {
+            c = a / b;
+            return c;
+        }
+       
+
+        
+          
+    }
+
+
+class program
+    {
+        public static void Main()
+        {
+            ArithmaticOperations Ar = new ArithmaticOperations();
+
+            Console.Write("Enter a number: a");
+            Ar.a = Convert.ToInt32(Console.ReadLine());
+
+            Console.Write("Enter another number:b ");
+            Ar.b = Convert.ToInt32(Console.ReadLine());
+
+            Ar.c = Ar.add();
+            Console.WriteLine("sum of " + Ar.a + " and " + Ar.b + " is " + Ar.c);
+            Ar.c = Ar.sub();
+            Console.WriteLine("sub of " + Ar.a + " and " + Ar.b + " is " + Ar.c);
+            Ar.c = Ar.product();
+            Console.WriteLine("product of " + Ar.a + " and " + Ar.b + " is " + Ar.c);
+            Ar.c = Ar.divide();
+            Console.WriteLine("div of " + Ar.a + " and " + Ar.b + " is " + Ar.c);
+
+        }
+    }
+
+
+    }
+
+
+  
+       
+    

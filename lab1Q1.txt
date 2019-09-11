@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace lab1q1
+{
+    class Employee
+    {
+        private int _employeeID;
+        private string _employeeName;
+        private string _department;
+        private string _address;
+        private string _city;
+        private int _salary;
+
+        public int EmployeeID { get => _employeeID; set => _employeeID = value; }
+        public string Department { get => _department; set => _department = value; }
+        public string Address { get => _address; set => _address = value; }
+        public string City { get => _city; set => _city = value; }
+        public int Salary { get => _salary; set => _salary = value; }
+        public string EmployeeName { get => _employeeName; set => _employeeName = value; }
+    }
+
+
+    class program
+    {
+        static void Main(string[] args)
+        {
+            Employee[] employee = new Employee[10];
+
+            for (int i = 0; i < 10; i++)
+            {
+                employee[i] = new Employee();
+            }
+
+            {
+
+                for (int i = 0; i < 10; i++)
+                {
+
+
+
+                    Console.WriteLine("enter employee ID");
+                    employee[i].EmployeeID = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("enterdepartment");
+                    employee[i].Department = Console.ReadLine();
+                    Console.WriteLine("enter address name");
+                    employee[i].Address = (Console.ReadLine());
+                    Console.WriteLine("enter city name");
+                    employee[i].City = (Console.ReadLine());
+                    Console.WriteLine("enter salary");
+                    employee[i].Salary = Convert.ToInt32(Console.ReadLine());
+
+
+
+
+
+                    Console.WriteLine("enter employee name");
+                    employee[i].EmployeeName = (Console.ReadLine());
+
+                }
+            }
+        }
+    }
+}
+    

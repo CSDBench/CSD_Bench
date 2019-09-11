@@ -1,0 +1,43 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Q3lab1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("enter an integer between 1 to 5");
+            int h = Convert.ToInt32(Console.ReadLine());
+            switch (h)
+            {
+                case 1:
+                    Console.WriteLine("you entered 1");
+                    break;
+                case 2:
+                    Console.WriteLine("you entered 2");
+                    break;
+                case 3:
+                    Console.WriteLine("you entered 3");
+                    break;
+                case 4:
+                    Console.WriteLine("you entered 4");
+                    break;
+                case 5:
+                    Console.WriteLine("you entered 5");
+                    break;
+                default:
+                    Console.WriteLine("invalid");
+                    break;
+
+                 
+
+            }
+
+
+            }
+    }
+}
