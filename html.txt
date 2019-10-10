@@ -1,0 +1,654 @@
+<div class="row">
+  <div class="col-md-3 col-lg-2 ml-0 pl-0 pt-0 pr-0 border-right left-menu">
+    <div class="p-2">
+      <h5>
+        RawMaterialOrder <span class="badge badge-secondary float-right" *ngIf="rawmaterialorder.length > 0">{{rawmaterialorder.length}}</span>
+      </h5>
+    </div>
+
+    <div class="list-group mb-5">
+      <a class="list-group-item list-group-item-action list-group-item-primary" data-toggle="modal" href="#newRawMaterialOrderModal" (click)="onCreateRawMaterialOrderClick()">Create RawMaterialOrder</a>
+    </div>
+
+    <div class="p-2 border-top"><h5>View</h5></div>
+    <div class="px-2">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="view" [(ngModel)]="viewRawMaterialOrderCheckBoxes.OrderID">
+        <label class="form-check-label" for="viewOrderID">
+          OrderID
+        </label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="viewOrderDate" [(ngModel)]="viewRawMaterialOrderCheckBoxes.OrderDate">
+        <label class="form-check-label" for="RawMaterialOrderDate">
+          OrderDate
+        </label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="viewTotalQuantity" [(ngModel)]="viewRawMaterialOrderCheckBoxes.TotalQuantity">
+        <label class="form-check-label" for="viewTotalQuantity">
+          TotalQuantity
+        </label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="viewCreatedOn" [(ngModel)]="viewRawMaterialOrderCheckBoxes.createdOn">
+        <label class="form-check-label" for="viewCreatedOn">
+          Created On
+        </label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="viewLastModifiedOn" [(ngModel)]="viewSupplierCheckBoxes.lastModifiedOn">
+        <label class="form-check-label" for="viewLastModifiedOn">
+          Last Modified On
+        </label>
+      </div>
+
+      <div class="form-group my-2">
+        <button class="btn btn-secondary btn-sm mr-1" (click)="onViewSelectAllClick()">Select All</button>
+        <button class="btn btn-secondary btn-sm" (click)="onViewDeselectAllClick()">Deselect All</button>
+      </div>
+    </div>
+
+
+
+    <div class="p-2 border-top mt-4"><h5>Sort by</h5></div>
+    <div class="px-2">
+      <div class="form-group">
+        <select class="form-control" [(ngModel)]="sortBy">
+          <option value="RawMaterialOrderID"> RawMaterial order ID</option>
+          <option value="RawMaterialOrderDate">RawMaterialOrderDate</option>
+          <option value="RawMaterialOrderQuantity">RawMaterialOrderQuantity</option>
+          <option value="creationDateTime">Created On</option>
+          <option value="lastModifiedDateTime">Last Modified On</option>
+        </select>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="radio" id="sortAscending" value="ASC" [(ngModel)]="sortDirection">
+        <label class="form-check-label" for="sortAscending">
+          Ascending
+        </label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="radio" id="sortDescending" value="DESC" [(ngModel)]="sortDirection">
+        <label class="form-check-label" for="sortDescending">
+          Descending
+        </label>
+      </div>
+
+      <div class="form-group my-2">
+        <button class="btn btn-secondary btn-sm mr-1 px-3" (click)="onBtnSortClick()">Sort</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="col-md-9 col-lg-10">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Admin</a></li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Suppliers
+          <i class="fa fa-circle-o-notch  fa-spin" *ngIf="showRawMaterialOrderSpinner"></i>
+        </li>
+      </ol>
+    </nav>
+
+    <!--<h4>RawMaterialOrder </h4>-->
+    <!--<button class="btn btn-primary" data-toggle="modal" data-target="#newRawMaterialOrderModal" (click)="onCreateRawMaterialOrderClick()">Create Supplier</button>-->
+
+    <table class="table mt-2">
+      <thead>
+        <tr class="table-secondary">
+          <th *ngIf="viewRawMaterialOrderCheckBoxes.RawMaterialOrderID">RawMaterialOrderID</th>
+          <th *ngIf="viewRawMaterialOrderCheckBoxes.RawMaterialOrderDate">RawMaterialOrderDate</th>
+          <th *ngIf="viewRawMaterialOrderCheckBoxes.RawMaterialTotalQuantity">RawMaterialTotalQuantity</th>
+          <th *ngIf="viewRawMaterialOrderCheckBoxes.createdOn">Created on</th>
+          <th *ngIf="viewRawMaterialOrderCheckBoxes.lastModifiedOn">Last Modified on</th>
+          <th class="text-secondary">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let RawMaterialOrder of RawMaterialOrder ; let index = index">
+          <td style="font-size:120%" *ngIf="viewRawMaterialOrderCheckBoxes.RawMaterialOrderID">{{RawMaterialOrder.RawMaterialOrderID}}</td>
+          <td *ngIf="viewRawMaterialOrderCheckBoxes.RawMaterialOrderDate">{{RawMaterialOrder.RawMaterialOrderDate}}</td>
+          <td *ngIf="viewRawMaterialOrderCheckBoxes.RawMaterialOrderTotalQuantity">{{RawMaterialOrder.RawMaterialOrderTotalQuantity}}</td>
+          <td *ngIf="viewRawMaterialOrderCheckBoxes.createdOn">{{RawMaterialOrder.creationDateTime}}</td>
+          <td *ngIf="viewRawMaterialOrderCheckBoxes.lastModifiedOn">{{RawMaterialOrder.lastModifiedDateTime}}</td>
+          <td>
+            <div class="btn-group">
+              <button class="btn btn-secondary" data-toggle="modal" data-target="#editRawMaterialOrderModal" (click)="onEditRawMaterialOrderClick(index)">Edit</button>
+              <button class="btn btn-danger" data-toggle="modal" data-target="#deleteRawMaterialOrderModal" (click)="onDeleteRawMaterialOrderClick(index)">Delete</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+
+
+
+<!-- New Supplier Modal -->
+<form [formGroup]="newRawMaterialOrderForm">
+  <div class="modal fade" id="newRawMaterialOrderModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-info text-white">
+          <h5 class="modal-title">Create RawMaterialOrder</h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-group form-row">
+            <label for="RawMaterialOrderID" class="col-form-label col-md-4">Order ID: *</label>
+            <div class="col-md-8">
+              <input type="text" placeholder="RawMaterialOrderID" class="form-control" id="RawMaterialOrderID" formControlName="RawMaterialOrderID" [ngClass]="getFormControlCssClass(newRawMaterialOrderIDForm.get('RawMaterialOrderID'), newRawMaterialOrderForm)" />
+              <small class="form-text text-muted">Name of the supplier | Can't be duplicate.</small>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('supplierName', 'required', newSupplierForm)">{{getFormControlErrorMessage('supplierName', 'required')}}</span>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('supplierName', 'minlength', newSupplierForm)">{{getFormControlErrorMessage('supplierName', 'minlength')}}</span>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('supplierName', 'maxlength', newSupplierForm)">{{getFormControlErrorMessage('supplierName', 'maxlength')}}</span>
+            </div>
+          </div>
+
+          <div class="form-group form-row">
+            <label for="supplierMobile" class="col-form-label col-md-4">Mobile:</label>
+            <div class="col-md-8">
+              <input type="text" placeholder="Mobile" class="form-control" id="supplierMobile" formControlName="supplierMobile" [ngClass]="getFormControlCssClass(newSupplierForm.get('supplierMobile'), newSupplierForm)" />
+              <small class="form-text text-muted">10 digit mobile number of the supplier | Can't be duplicate.</small>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('supplierMobile', 'required', newSupplierForm)">{{getFormControlErrorMessage('supplierMobile', 'required')}}</span>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('supplierMobile', 'pattern', newSupplierForm)">{{getFormControlErrorMessage('supplierMobile', 'pattern')}}</span>
+            </div>
+          </div>
+
+          <div class="form-group form-row">
+            <label for="email" class="col-form-label col-md-4">Email:</label>
+            <div class="col-md-8">
+              <input type="text" placeholder="Email" class="form-control" id="email" formControlName="email" [ngClass]="getFormControlCssClass(newSupplierForm.get('email'), newSupplierForm)" />
+              <small class="form-text text-muted">Email address of the supplier | Can't be duplicate.</small>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('email', 'required', newSupplierForm)">{{getFormControlErrorMessage('email', 'required')}}</span>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('email', 'email', newSupplierForm)">{{getFormControlErrorMessage('email', 'email')}}</span>
+            </div>
+          </div>
+
+          <div class="form-group form-row">
+            <label for="password" class="col-form-label col-md-4">Password:</label>
+            <div class="col-md-8">
+              <input type="password" placeholder="Password" class="form-control" id="password" formControlName="password" [ngClass]="getFormControlCssClass(newSupplierForm.get('password'), newSupplierForm)" />
+              <small class="form-text text-muted">At least one uppercase letter, one lowercase letter and one digit.</small>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('password', 'required', newSupplierForm)">{{getFormControlErrorMessage('password', 'required')}}</span>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('password', 'pattern', newSupplierForm)">{{getFormControlErrorMessage('password', 'pattern')}}</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnAddSupplierCancel">
+            <i class="fa fa-times-circle"></i> Cancel
+          </button>
+          <button type="submit" class="btn btn-success" (click)="onAddSupplierClick($event)" [disabled]="newSupplierDisabled">
+            <span *ngIf="!newSupplierDisabled"><i class="fa fa-save"></i> Save</span>
+            <span *ngIf="newSupplierDisabled"><i class="fa fa-circle-o-notch  fa-spin"></i> Saving</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+
+<!-- Edit Supplier Modal -->
+<form [formGroup]="editSupplierForm">
+  <div class="modal fade" id="editSupplierModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-info text-white">
+          <h5 class="modal-title">Update Supplier</h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-group form-row">
+            <label for="supplierName" class="col-form-label col-md-4">Supplier Name:</label>
+            <div class="col-md-8">
+              <input type="text" placeholder="Supplier Name" class="form-control" id="supplierName" formControlName="supplierName" [ngClass]="getFormControlCssClass(editSupplierForm.get('supplierName'), editSupplierForm)" />
+              <small class="form-text text-muted">Name of the supplier | Can't be duplicate.</small>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('supplierName', 'required', editSupplierForm)">{{getFormControlErrorMessage('supplierName', 'required')}}</span>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('supplierName', 'minlength', editSupplierForm)">{{getFormControlErrorMessage('supplierName', 'minlength')}}</span>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('supplierName', 'maxlength', editSupplierForm)">{{getFormControlErrorMessage('supplierName', 'maxlength')}}</span>
+            </div>
+          </div>
+
+          <div class="form-group form-row">
+            <label for="supplierMobile" class="col-form-label col-md-4">Mobile:</label>
+            <div class="col-md-8">
+              <input type="text" placeholder="Mobile" class="form-control" id="supplierMobile" formControlName="supplierMobile" [ngClass]="getFormControlCssClass(editSupplierForm.get('supplierMobile'), editSupplierForm)" />
+              <small class="form-text text-muted">10 digit mobile number of the supplier | Can't be duplicate.</small>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('supplierMobile', 'required', editSupplierForm)">{{getFormControlErrorMessage('supplierMobile', 'required')}}</span>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('supplierMobile', 'pattern', editSupplierForm)">{{getFormControlErrorMessage('supplierMobile', 'pattern')}}</span>
+            </div>
+          </div>
+
+          <div class="form-group form-row">
+            <label for="email" class="col-form-label col-md-4">Email:</label>
+            <div class="col-md-8">
+              <input type="text" placeholder="Email" class="form-control" id="email" formControlName="email" [ngClass]="getFormControlCssClass(editSupplierForm.get('email'), editSupplierForm)" />
+              <small class="form-text text-muted">Email address of the supplier | Can't be duplicate.</small>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('email', 'required', editSupplierForm)">{{getFormControlErrorMessage('email', 'required')}}</span>
+
+              <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('email', 'email', editSupplierForm)">{{getFormControlErrorMessage('email', 'email')}}</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnUpdateSupplierCancel">
+            <i class="fa fa-times-circle"></i> Cancel
+          </button>
+          <button type="submit" class="btn btn-success" (click)="onUpdateSupplierClick($event)" [disabled]="editSupplierDisabled">
+            <span *ngIf="!editSupplierDisabled"><i class="fa fa-save"></i> Save</span>
+            <span *ngIf="editSupplierDisabled"><i class="fa fa-circle-o-notch  fa-spin"></i> Saving</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+
+
+<!-- Delete Supplier Modal -->
+<form [formGroup]="deleteSupplierForm">
+  <div class="modal fade" id="deleteSupplierModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-info text-white">
+          <h5 class="modal-title">Delete Supplier</h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <h5 class="mb-4">Are you sure to delete this Supplier?</h5>
+
+          <div class="form-group form-row">
+            <label for="supplierName" class="col-form-label col-md-4">Supplier Name:</label>
+            <div class="col-md-8">
+              <input type="text" placeholder="Supplier Name" readonly="readonly" class="form-control-plaintext" id="supplierName" formControlName="supplierName" />
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnDeleteSupplierCancel">
+            <i class="fa fa-times-circle"></i> Cancel
+          </button>
+          <button type="submit" class="btn btn-danger" (click)="onDeleteSupplierConfirmClick($event)" [disabled]="deleteSupplierDisabled">
+            <span *ngIf="!deleteSupplierDisabled"><i class="fa fa-save"></i> Delete</span>
+            <span *ngIf="deleteSupplierDisabled"><i class="fa fa-circle-o-notch  fa-spin"></i> Deleting</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { Component, OnInit } from '@angular/core';
+
+import { RawMaterialOrder } from 'src/app/Models/raw-order';
+import { RawMaterialOrderService } from '../../Services/rawmaterialorder.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import * as $ from "jquery";
+import { InventoryComponentBase } from '../../inventory-component';
+
+
+@Component({
+  selector: 'app-RawMaterialOrder',
+  templateUrl: './RawMaterialOrder.component.html',
+  styleUrls: ['./RawMaterialOrder.component.scss']
+})
+export class RawMaterialOrderComponent extends InventoryComponentBase implements OnInit
+{
+  rawMaterialOrder: RawMaterialOrder [] = [];
+  showRawMaterialOrderSpinner: boolean = false;
+  viewRawMaterialOrderCheckBoxes: any;
+
+  sortBy: string = "RawMaterialOrderID";
+  sortDirection: string = "ASC";
+
+  newRawMaterialOrderForm: FormGroup;
+  newRawMaterialOrderDisabled: boolean = false;
+  newRawMaterialOrderFormErrorMessages: any;
+
+  editRawMaterialOrderForm: FormGroup;
+  editRawMaterialOrderDisabled: boolean = false;
+  editRawMaterialOrderFormErrorMessages: any;
+
+  deleteRawMaterialOrderForm: FormGroup;
+  deleteRawMaterialOrderDisabled: boolean = false;
+
+  constructor(private RawMaterialOrderService: RawMaterialOrderService)
+  {
+    super();
+    this.newRawMaterialOrderForm = new FormGroup({
+
+      RawMaterialOrderDate: new FormControl(null, [Validators.required, Validators.pattern(/^([0-9]{2})-([0-9]{2})-([0-9]{4})]$/)]),
+       SupplierID: new FormControl(null),
+        RawMaterialOrderTotalQuantity: new FormControl(null, [Validators.required]),
+        RawMaterialOrderTotalPrice: new FormControl(null, [Validators.required]),
+    });
+
+    this.newRawMaterialOrderFormErrorMessages = {
+      RawMaterialOrderDate: { required: "RawMaterialOrderdate  can't be blank", pattern: "RawMaterialOrder date shall be in the pattern of mm/dd/yyyy"},
+      SupplierID: { required: "SupplierID can't be blank"},
+      RawMaterialOrderTotalQuantity: { required: " total quantity can't be blank"},
+      RawMaterialOrderTotalPrice: { required: "Password can't be blank"},
+    };
+
+
+
+    this.editRawMaterialOrderForm = new FormGroup({
+      id: new FormControl(null),
+      RawMaterialOrderID: new FormControl(null),
+      RawMaterialOrderName: new FormControl(null, [Validators.required, Validators.minLength(2), Validators.maxLength(40)]),
+      RawMaterialOrderMobile: new FormControl(null, [Validators.required, Validators.pattern(/^[6789]\d{9}$/)]),
+      email: new FormControl(null, [Validators.required, Validators.email]),
+      password: new FormControl(null),
+      creationDateTime: new FormControl(null)
+    });
+
+    this.editRawMaterialOrderFormErrorMessages = {
+      RawMaterialOrderName: { required: "RawMaterialOrder Name can't be blank", minlength: "RawMaterialOrder Name should contain at least 2 characters", maxlength: "RawMaterialOrder Name can't be longer than 40 characters" },
+      RawMaterialOrderMobile: { required: "Mobile number can't be blank", pattern: "10 digit Mobile number is required" },
+      email: { required: "Email can't be blank", pattern: "Email is invalid" }
+    };
+
+    this.viewRawMaterialOrderCheckBoxes = {
+      RawMaterialOrderName: true,
+      mobile: true,
+      email: true,
+      createdOn: true,
+      lastModifiedOn: true
+    };
+
+    this.deleteRawMaterialOrderForm = new FormGroup({
+      id: new FormControl(null),
+      RawMaterialOrderID: new FormControl(null),
+      RawMaterialOrderName: new FormControl(null)
+    });
+  }
+
+  ngOnInit()
+  {
+    this.showRawMaterialOrderSpinner = true;
+    this.RawMaterialOrderService.GetAllRawMaterialOrders().subscribe((response) =>
+    {
+      this.rawMaterialOrder = response;
+      this.showRawMaterialOrderSpinner = false;
+    }, (error) =>
+      {
+        console.log(error);
+      })
+  }
+
+  onCreateRawMaterialOrderClick()
+  {
+    this.newRawMaterialOrderForm.reset();
+    this.newRawMaterialOrderForm["submitted"] = false;
+  }
+
+  onAddRawMaterialOrderClick(event)
+  {
+    this.newRawMaterialOrderForm["submitted"] = true;
+    if (this.newRawMaterialOrderForm.valid)
+    {
+      this.newRawMaterialOrderDisabled = true;
+      var RawMaterialOrder: RawMaterialOrder = this.newRawMaterialOrderForm.value;
+
+      this.RawMaterialOrderService.AddRawMaterialOrder(RawMaterialOrder).subscribe((addResponse) =>
+      {
+        this.newRawMaterialOrderForm.reset();
+        $("#btnAddRawMaterialOrderCancel").trigger("click");
+        this.newRawMaterialOrderDisabled = false;
+        this.showRawMaterialOrderSpinner = true;
+
+        this.RawMaterialOrderService.GetAllRawMaterialOrders().subscribe((getResponse) =>
+        {
+          this.showRawMaterialOrderSpinner = false;
+          this.rawMaterialOrder = getResponse;
+        }, (error) =>
+          {
+            console.log(error);
+          });
+      },
+        (error) =>
+        {
+          console.log(error);
+          this.newRawMaterialOrderDisabled = false;
+        });
+    }
+    else
+    {
+      super.getFormGroupErrors(this.newRawMaterialOrderForm);
+    }
+  }
+
+
+
+  getFormControlCssClass(formControl: FormControl, formGroup: FormGroup): any
+  {
+    return {
+      'is-invalid': formControl.invalid && (formControl.dirty || formControl.touched || formGroup["submitted"]),
+      'is-valid': formControl.valid && (formControl.dirty || formControl.touched || formGroup["submitted"])
+    };
+  }
+
+  getFormControlErrorMessage(formControlName: string, validationProperty: string): string
+  {
+    return this.newRawMaterialOrderFormErrorMessages[formControlName][validationProperty];
+  }
+
+  getCanShowFormControlErrorMessage(formControlName: string, validationProperty: string, formGroup: FormGroup): boolean
+  {
+    return formGroup.get(formControlName).invalid && (formGroup.get(formControlName).dirty || formGroup.get(formControlName).touched || formGroup['submitted']) && formGroup.get(formControlName).errors[validationProperty];
+  }
+
+
+
+  onEditRawMaterialOrderClick(index)
+  {
+    this.editRawMaterialOrderForm.reset();
+    this.editRawMaterialOrderForm["submitted"] = false;
+    this.editRawMaterialOrderForm.patchValue({
+      id: this.rawMaterialOrder[index].id,
+      RawMaterialOrderID: this.rawMaterialOrder[index].RawMaterialOrderID,
+      RawMaterialOrderName: this.rawMaterialOrder[index].RawMaterialOrderDate,
+      RawMaterialOrderMobile: this.rawMaterialOrder[index].SupplierID,
+      email: this.rawMaterialOrder[index].RawMaterialOrderTotalPrice,
+      password: this.rawMaterialOrder[index].RawMaterialOrderTotalQuantity,
+      creationDateTime: this.rawMaterialOrder[index].creationDateTime
+    });
+  }
+
+  onUpdateRawMaterialOrderClick(event)
+  {
+    this.editRawMaterialOrderForm["submitted"] = true;
+    if (this.editRawMaterialOrderForm.valid)
+    {
+      this.editRawMaterialOrderDisabled = true;
+      var RawMaterialOrder: RawMaterialOrder = this.editRawMaterialOrderForm.value;
+
+      this.RawMaterialOrderService.UpdateRawMaterialOrder(RawMaterialOrder).subscribe((updateResponse) =>
+      {
+        this.editRawMaterialOrderForm.reset();
+        $("#btnUpdateRawMaterialOrderCancel").trigger("click");
+        this.editRawMaterialOrderDisabled = false;
+        this.showRawMaterialOrderSpinner = true;
+
+        this.RawMaterialOrderService.GetAllRawMaterialOrders().subscribe((getResponse) =>
+        {
+          this.showRawMaterialOrderSpinner = false;
+          this.rawMaterialOrder = getResponse;
+        }, (error) =>
+          {
+            console.log(error);
+          });
+      },
+        (error) =>
+        {
+          console.log(error);
+          this.editRawMaterialOrderDisabled = false;
+        });
+    }
+    else
+    {
+      super.getFormGroupErrors(this.editRawMaterialOrderForm);
+    }
+  }
+
+
+
+  onDeleteRawMaterialOrderClick(index)
+  {
+    this.deleteRawMaterialOrderForm.reset();
+    this.deleteRawMaterialOrderForm["submitted"] = false;
+    this.deleteRawMaterialOrderForm.patchValue({
+      id: this.rawMaterialOrder[index].id,
+      RawMaterialOrderID: this.rawMaterialOrder[index].RawMaterialOrderID,
+    });
+  }
+
+  onDeleteRawMaterialOrderConfirmClick(event)
+  {
+    this.deleteRawMaterialOrderForm["submitted"] = true;
+    if (this.deleteRawMaterialOrderForm.valid)
+    {
+      this.deleteRawMaterialOrderDisabled = true;
+      var RawMaterialOrder: RawMaterialOrder = this.deleteRawMaterialOrderForm.value;
+
+      this.RawMaterialOrderService.DeleterawMaterialOrder(RawMaterialOrder.RawMaterialOrderID, RawMaterialOrder.id).subscribe((deleteResponse) =>
+      {
+        this.deleteRawMaterialOrderForm.reset();
+        $("#btnDeleteRawMaterialOrderCancel").trigger("click");
+        this.deleteRawMaterialOrderDisabled = false;
+        this.showRawMaterialOrderSpinner = true;
+
+        this.RawMaterialOrderService.GetAllRawMaterialOrders().subscribe((getResponse) =>
+        {
+          this.showRawMaterialOrderSpinner = false;
+          this.rawMaterialOrder = getResponse;
+        }, (error) =>
+          {
+            console.log(error);
+          });
+      },
+        (error) =>
+        {
+          console.log(error);
+          this.deleteRawMaterialOrderDisabled = false;
+        });
+    }
+    else
+    {
+      super.getFormGroupErrors(this.deleteRawMaterialOrderForm);
+    }
+  }
+
+
+
+  onViewSelectAllClick()
+  {
+    for (let propertyName of Object.keys(this.viewRawMaterialOrderCheckBoxes))
+    {
+      this.viewRawMaterialOrderCheckBoxes[propertyName] = true;
+    }
+  }
+
+  onViewDeselectAllClick()
+  {
+    for (let propertyName of Object.keys(this.viewRawMaterialOrderCheckBoxes))
+    {
+      this.viewRawMaterialOrderCheckBoxes[propertyName] = false;
+    }
+  }
+  
+  onBtnSortClick()
+  {
+    console.log(this.sortBy);
+    this.rawMaterialOrder.sort((a, b) =>
+    {
+      let comparison = 0;
+      let value1 = ((typeof a[this.sortBy]) == 'string') ? a[this.sortBy].toUpperCase() : a[this.sortBy];
+      let value2 = ((typeof b[this.sortBy]) == 'string') ? b[this.sortBy].toUpperCase() : b[this.sortBy];
+
+      if (value1 < value2)
+      {
+        comparison = -1;
+      }
+      else if (value1 > value2)
+      {
+        comparison = 1;
+      }
+      if (this.sortDirection == "DESC")
+        comparison = comparison * -1;
+
+      console.log(value1, value2, comparison);
+      return comparison;
+    });
+
+  }
+}
+
+
+
