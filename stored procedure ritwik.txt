@@ -1,0 +1,297 @@
+--procedure to add a raw material order into table
+ alter  procedure AddRawmaterialOrder ( @RawMaterialOrderID varchar(30), @RawMaterialOrderDate datetime,@SupplierID varchar(30),
+ @RawMaterialTotalPrice decimal, @RawMaterialTotalQuantity  decimal)
+ as 
+ --developed by Ritwik on 30/09/2019
+ begin
+ if isnull(@RawMaterialTotalPrice,0) = 0
+   throw 50001, 'raw material total price cannot be 0 ', 1
+ if isnull(@RawMaterialTotalQuantity,0) = 0
+ throw 50002, 'raw material total quantity cannot be 0', 1
+ if @RawMaterialTotalPrice <0
+   throw 50003, 'raw material total price cannot be negative ', 1
+ if @RawMaterialTotalQuantity <0 
+ throw 50004, 'raw material total quantity cannot be negative', 1
+ insert into RMAO.Rawmaterialorder(CreationDateTime, LastmodifiedDateTime,RawMaterialOrderID , RawMaterialOrderDate ,SupplierID ,
+ RawMaterialTotalPrice , RawMaterialTotalQuantity)
+ values ( sysdatetime(), sysdatetime(),@RawMaterialOrderID , @RawMaterialOrderDate,@SupplierID ,
+ @RawMaterialTotalPrice, @RawMaterialTotalQuantity)
+ end
+ select * from  RMAO.Rawmaterialorder
+ exec AddRawmaterialOrder '1001','10-oct-2019', '2', 100, 10
+
+ --PROCEDURE CREATED
+
+--Procedure to get all the RawMaterial orders
+go
+create procedure GetAllRawMaterialOrder
+as 
+begin 
+	begin try 
+	select*from RMAO.RawMaterialOrder
+	end try
+	begin catch
+		PRINT @@ERROR;
+		throw 500001,'Invalid Values Fetched',2
+		return 0
+    end catch
+end
+GO
+--Procedure to delete RawMaterial Order
+alter procedure DeleteRawMaterialOrder(@RawMaterialOrderID varchar(40) )
+as 
+begin
+	begin try
+		DELETE FROM RMAO.RawMaterialOrder where RawMaterialOrderID=@RawMaterialOrderID
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 500001,'Invalid Values Fetched',3
+		return 0
+    end catch
+end
+GO
+--Procedure to update RawMaterial order
+create procedure UpdateRawMaterialOrder( @RawMaterialOrderID varchar(30), @RawMaterialOrderDate datetime,@SupplierID varchar(30),
+ @RawMaterialTotalPrice decimal, @RawMaterialTotalQuantity  decimal)
+as
+begin
+	begin try
+		UPDATE RMAO.RawMaterialOrder
+		SET RawMaterialTotalPrice=@RawMaterialTotalPrice, RawMaterialTotalQuantity= @RawMaterialTotalQuantity
+		WHERE RawMaterialOrderID=@RawMaterialOrderID
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 500001,'Invalid Values Fetched',4
+		return 0
+    end catch
+end
+GO
+
+create procedure GetRawMaterialOrderbyRawMaterialOrderID(@RawMaterialOrderID varchar(40))
+as 
+begin
+	begin try
+		SELECT* FROM RMAO.RawMaterialOrder where RawMaterialOrderID=@RawMaterialOrderID
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 5001,'Invalid Values Fetched',6
+		return 0
+    end catch
+end
+GO
+
+create procedure GetRawMaterialOrdersByOrderDate(@RawMaterialOrderDate datetime)
+as 
+begin
+	begin try
+		SELECT * FROM RMAO.RawMaterialOrder where RawMaterialOrderDate=@RawMaterialOrderDate
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 5001,'Invalid Values Fetched',6
+		return 0
+    end catch
+end
+GO
+
+--procedure to add a raw material order into table
+ alter  procedure AddRawmaterialOrder ( @RawMaterialOrderID varchar(30), @RawMaterialOrderDate datetime,@SupplierID varchar(30),
+ @RawMaterialTotalPrice decimal, @RawMaterialTotalQuantity  decimal)
+ as 
+ --developed by Ritwik on 30/09/2019
+ begin
+ if isnull(@RawMaterialTotalPrice,0) = 0
+   throw 50001, 'raw material total price cannot be 0 ', 1
+ if isnull(@RawMaterialTotalQuantity,0) = 0
+ throw 50002, 'raw material total quantity cannot be 0', 1
+ if @RawMaterialTotalPrice <0
+   throw 50003, 'raw material total price cannot be negative ', 1
+ if @RawMaterialTotalQuantity <0 
+ throw 50004, 'raw material total quantity cannot be negative', 1
+ insert into RMAO.Rawmaterialorder(CreationDateTime, LastmodifiedDateTime,RawMaterialOrderID , RawMaterialOrderDate ,SupplierID ,
+ RawMaterialTotalPrice , RawMaterialTotalQuantity)
+ values ( sysdatetime(), sysdatetime(),@RawMaterialOrderID , @RawMaterialOrderDate,@SupplierID ,
+ @RawMaterialTotalPrice, @RawMaterialTotalQuantity)
+ end
+ select * from  RMAO.Rawmaterialorder
+ exec AddRawmaterialOrder '1001','10-oct-2019', '2', 100, 10
+
+ --PROCEDURE CREATED
+
+--Procedure to get all the RawMaterial orders
+go
+create procedure GetAllRawMaterialOrder
+as 
+begin 
+	begin try 
+	select*from RMAO.RawMaterialOrder
+	end try
+	begin catch
+		PRINT @@ERROR;
+		throw 500001,'Invalid Values Fetched',2
+		return 0
+    end catch
+end
+GO
+--Procedure to delete RawMaterial Order
+alter procedure DeleteRawMaterialOrder(@RawMaterialOrderID varchar(40) )
+as 
+begin
+	begin try
+		DELETE FROM RMAO.RawMaterialOrder where RawMaterialOrderID=@RawMaterialOrderID
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 500001,'Invalid Values Fetched',3
+		return 0
+    end catch
+end
+GO
+--Procedure to update RawMaterial order
+create procedure UpdateRawMaterialOrder( @RawMaterialOrderID varchar(30), @RawMaterialOrderDate datetime,@SupplierID varchar(30),
+ @RawMaterialTotalPrice decimal, @RawMaterialTotalQuantity  decimal)
+as
+begin
+	begin try
+		UPDATE RMAO.RawMaterialOrder
+		SET RawMaterialTotalPrice=@RawMaterialTotalPrice, RawMaterialTotalQuantity= @RawMaterialTotalQuantity
+		WHERE RawMaterialOrderID=@RawMaterialOrderID
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 500001,'Invalid Values Fetched',4
+		return 0
+    end catch
+end
+GO
+
+create procedure GetRawMaterialOrderbyRawMaterialOrderID(@RawMaterialOrderID varchar(40))
+as 
+begin
+	begin try
+		SELECT* FROM RMAO.RawMaterialOrder where RawMaterialOrderID=@RawMaterialOrderID
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 5001,'Invalid Values Fetched',6
+		return 0
+    end catch
+end
+GO
+
+create procedure GetRawMaterialOrdersByOrderDate(@RawMaterialOrderDate datetime)
+as 
+begin
+	begin try
+		SELECT * FROM RMAO.RawMaterialOrder where RawMaterialOrderDate=@RawMaterialOrderDate
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 5001,'Invalid Values Fetched',6
+		return 0
+    end catch
+end
+GO
+
+--procedure to add a raw material order into table
+ alter  procedure AddRawmaterialOrder ( @RawMaterialOrderID varchar(30), @RawMaterialOrderDate datetime,@SupplierID varchar(30),
+ @RawMaterialTotalPrice decimal, @RawMaterialTotalQuantity  decimal)
+ as 
+ --developed by Ritwik on 30/09/2019
+ begin
+ if isnull(@RawMaterialTotalPrice,0) = 0
+   throw 50001, 'raw material total price cannot be 0 ', 1
+ if isnull(@RawMaterialTotalQuantity,0) = 0
+ throw 50002, 'raw material total quantity cannot be 0', 1
+ if @RawMaterialTotalPrice <0
+   throw 50003, 'raw material total price cannot be negative ', 1
+ if @RawMaterialTotalQuantity <0 
+ throw 50004, 'raw material total quantity cannot be negative', 1
+ insert into RMAO.Rawmaterialorder(CreationDateTime, LastmodifiedDateTime,RawMaterialOrderID , RawMaterialOrderDate ,SupplierID ,
+ RawMaterialTotalPrice , RawMaterialTotalQuantity)
+ values ( sysdatetime(), sysdatetime(),@RawMaterialOrderID , @RawMaterialOrderDate,@SupplierID ,
+ @RawMaterialTotalPrice, @RawMaterialTotalQuantity)
+ end
+ select * from  RMAO.Rawmaterialorder
+ exec AddRawmaterialOrder '1001','10-oct-2019', '2', 100, 10
+
+ --PROCEDURE CREATED
+
+--Procedure to get all the RawMaterial orders
+go
+create procedure GetAllRawMaterialOrder
+as 
+begin 
+	begin try 
+	select*from RMAO.RawMaterialOrder
+	end try
+	begin catch
+		PRINT @@ERROR;
+		throw 500001,'Invalid Values Fetched',2
+		return 0
+    end catch
+end
+GO
+--Procedure to delete RawMaterial Order
+alter procedure DeleteRawMaterialOrder(@RawMaterialOrderID varchar(40) )
+as 
+begin
+	begin try
+		DELETE FROM RMAO.RawMaterialOrder where RawMaterialOrderID=@RawMaterialOrderID
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 500001,'Invalid Values Fetched',3
+		return 0
+    end catch
+end
+GO
+--Procedure to update RawMaterial order
+create procedure UpdateRawMaterialOrder( @RawMaterialOrderID varchar(30), @RawMaterialOrderDate datetime,@SupplierID varchar(30),
+ @RawMaterialTotalPrice decimal, @RawMaterialTotalQuantity  decimal)
+as
+begin
+	begin try
+		UPDATE RMAO.RawMaterialOrder
+		SET RawMaterialTotalPrice=@RawMaterialTotalPrice, RawMaterialTotalQuantity= @RawMaterialTotalQuantity
+		WHERE RawMaterialOrderID=@RawMaterialOrderID
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 500001,'Invalid Values Fetched',4
+		return 0
+    end catch
+end
+GO
+
+create procedure GetRawMaterialOrderbyRawMaterialOrderID(@RawMaterialOrderID varchar(40))
+as 
+begin
+	begin try
+		SELECT* FROM RMAO.RawMaterialOrder where RawMaterialOrderID=@RawMaterialOrderID
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 5001,'Invalid Values Fetched',6
+		return 0
+    end catch
+end
+GO
+
+create procedure GetRawMaterialOrdersByOrderDate(@RawMaterialOrderDate datetime)
+as 
+begin
+	begin try
+		SELECT * FROM RMAO.RawMaterialOrder where RawMaterialOrderDate=@RawMaterialOrderDate
+	end try
+	begin catch
+	PRINT @@ERROR;
+		throw 5001,'Invalid Values Fetched',6
+		return 0
+    end catch
+end
+GO
+
