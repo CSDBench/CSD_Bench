@@ -102,7 +102,7 @@ export class NewOrderComponent extends InventoryComponentBase implements OnInit 
         quantity: new FormControl(1, [Validators.required, Validators.pattern(/^[0-9]*$/)]),
         totalAmount: new FormControl(null)
       }));
-      (confirm("Are you sure to place order?"))
+      
     }
 
   onQuantityChange(index: number) {
@@ -135,14 +135,7 @@ export class NewOrderComponent extends InventoryComponentBase implements OnInit 
         console.log(error);
       });
   }
-  onPlaceOrderClick(index: number) {
-    if (confirm("Are you sure to place order?")) {
-
-      (this.newOrderForm.get('orderDetails') as FormArray).removeAt(index);
-    }
-      
-    
-  } 
+  
    /**
  * To delete raw material order
  */
@@ -150,6 +143,9 @@ export class NewOrderComponent extends InventoryComponentBase implements OnInit 
     if (confirm("Are you sure to delete?")) {
       (this.newOrderForm.get('orderDetails') as FormArray).removeAt(index);
     }
+  }
+  onAddOrderClick(index: number) {
+    (confirm("Are you sure to place order?"));
   }
   
 
