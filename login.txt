@@ -1,0 +1,129 @@
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserAccountService } from '../../Services/user-account.service';
+import { User } from '../../Models/user';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
+})
+export class LoginComponent implements OnInit {
+  loginForm: FormGroup;
+  loginFormDisabled: boolean = false;
+  loginFormErrorMessages: any;
+
+  constructor(private userAccountService: UserAccountService, private router: Router) {
+    this.loginForm = new FormGroup(
+      {
+        email: new FormControl(null, [Validators.required, Validators.email]),
+        password: new FormControl(null, [Validators.required]),
+        userType: new FormControl(null, [Validators.required])
+      });
+
+    this.loginFormErrorMessages = {
+      email: { required: "Email can't be blank", pattern: "Email is invalid" },
+      password: { required: "Password can't be blank"},
+      userType: { required: "User Type should be selected" }
+    };
+  }
+
+  ngOnInit() {
+  }
+
+  getFormControlCssClass(formControl: FormControl, formGroup: FormGroup): any {
+    return {
+      'is-invalid': formControl.invalid && (formControl.dirty || formControl.touched || formGroup["submitted"]),
+      'is-valid': formControl.valid && (formControl.dirty || formControl.touched || formGroup["submitted"])
+    };
+  }
+
+  getFormControlErrorMessage(formControlName: string, validationProperty: string): string {
+    return this.loginFormErrorMessages[formControlName][validationProperty];
+  }
+  getCanShowFormControlErrorMessage(formControlName: string, validationProperty: string, formGroup: FormGroup): boolean {
+    return formGroup.get(formControlName).invalid && (formGroup.get(formControlName).dirty || formGroup.get(formControlName).touched || formGroup['submitted']) && formGroup.get(formControlName).errors[validationProperty];
+  }
+
+
+  onLoginClick() {
+    this.userAccountService.authenticate(this.loginForm.value.email, this.loginForm.value.password, this.loginForm.value.userType).subscribe((response) => {
+      if (response != null && response.length > 0) {
+
+        if (this.loginForm.value.userType == "Admin") {
+          this.userAccountService.currentUser = new User(this.loginForm.value.email, response[0].adminName);
+          this.userAccountService.currentUserType = "Admin";
+          this.userAccountService.currentUserID = response[0].adminID;
+          this.userAccountService.userID = response[0].id;
+          this.userAccountService.isLoggedIn = true;
+          this.router.navigate(["/admin", "home"]);
+        }
+        else if (this.loginForm.value.userType == "Employee") {
+          this.userAccountService.currentUser = new User(this.loginForm.value.email, response[0].employeeName);
+          this.userAccountService.currentUserType = "Employee";
+          this.userAccountService.currentUserID = response[0].employeeID;
+          this.userAccountService.userID = response[0].id;
+          this.userAccountService.isLoggedIn = true;
+          this.router.navigate(["/employee", "home"]);
+        }
+
+      }
+      else {
+        alert("Incorrect Email or Password. ");
+      }
+    }, (error) => {
+      console.log(error);
+      });
+
+  }
+
+ 
+  
+}
+
+
+
+
+
+
+
+html-------------------------------------------------
+
+<div class="row">
+  <div class="col-lg-6 col-md-9 mx-auto">
+    <form [formGroup]="loginForm">
+      <div class="card mt-2">
+        <div class="card-header bg-secondary text-white">
+          <h4>Login</h4>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="email">Email: *</label>
+            <input type="text" class="form-control" placeholder="Email" autofocus="autofocus" id="email" formControlName="email" />
+            <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('email', 'required', loginForm)">{{getFormControlErrorMessage('email', 'required')}}</span>
+          </div>
+          <div class="form-group">
+            <label for="password">Password: *</label>
+            <input type="password" class="form-control" placeholder="Password" id="password" formControlName="password" />
+            <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('password', 'required', loginForm)">{{getFormControlErrorMessage('password', 'required')}}</span>
+          </div>
+          <div class="form-group">
+            <label for="userType">User Type: *</label>
+            <select name="userType" class="custom-select" id="userType" formControlName="userType">
+              <option value="Admin">Admin</option>
+              <option value="Employee">Employee</option>
+            </select>
+            <small class="form-text text-muted">Select User Type to Log In.</small>
+            <span class="text-danger" *ngIf="getCanShowFormControlErrorMessage('userType', 'required', loginForm)">{{getFormControlErrorMessage('userType', 'required')}}</span>
+          </div>
+
+        </div>
+        <div class="card-footer text-right">
+          <button class="btn btn-success" (click)="onLoginClick()"><span class="fa fa-sign-in"></span> Login</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
