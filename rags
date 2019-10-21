@@ -1,0 +1,120 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+using Capgemini.GreatOutdoor.BusinessLayer;
+using Capgemini.GreatOutdoor.Entities;
+using Capgemini.GreatOutdoor.Helpers;
+
+
+namespace Capgemini.GreatOutdoor
+{
+    /// <summary>
+    /// Interaction logic for OfflineOrder.xaml
+    /// </summary>
+    public partial class OfflineOrderWindow : Window
+    {
+        public OfflineOrderWindow()
+        {
+            InitializeComponent();
+        }
+        Guid offlineOrderGuid;
+
+        RetailerBL retailerBL = new RetailerBL();
+        ProductBL productBL = new ProductBL();
+        List<Retailer> retailers = new List<Retailer>();
+        List<Product> products = new List<Product>();
+        Product currentProduct = new Product();
+        OfflineOrderDetail currentOfflineOrderDetail = new OfflineOrderDetail();
+        OfflineOrder currentOrder = new OfflineOrder();
+        OfflineOrderBL offlineOrderBL = new OfflineOrderBL();
+        OfflineOrderDetailBL offlineOrderDetailBL = new OfflineOrderDetailBL();
+       
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+           
+            var retailers = await retailerBL.GetAllRetailersBL();
+            var products = await productBL.GetAllProductsBL();
+            cmbRetailer.ItemsSource = retailers;
+            cmdProduct.ItemsSource = products;
+            cmbRetailer.DisplayMemberPath = "RetailerName";
+            cmbRetailer.SelectedValuePath = "RetailerID";
+            cmdProduct.DisplayMemberPath = "ProductName";
+            cmdProduct.SelectedValuePath = "ProductID";
+           
+
+           
+           
+        }
+
+        private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MessageBox.Show(cmbRetailer.SelectedValue.ToString());
+            OfflineOrderBL offlineOrderBL = new OfflineOrderBL();
+            currentOrder.RetailerID = Guid.Parse(cmbRetailer.SelectedValue.ToString());
+            currentOrder.SalesPersonID = Guid.Parse("9A38AE9C-4E8C-41E3-872F-5FD823C8E9B9");
+            currentOrder.TotalOrderAmount = 100;
+            currentOrder.TotalQuantity = 100;
+           
+            bool value;
+            (value, offlineOrderGuid) = await offlineOrderBL.AddOfflineOrderBL(currentOrder);
+           
+            if (value)
+            {
+                MessageBox.Show(offlineOrderGuid.ToString());
+            }
+
+
+
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
+        private async void CmdProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            currentProduct = await productBL.GetProductByProductIDBL(Guid.Parse(cmdProduct.SelectedValue.ToString()));
+            txtUnitPrice.SelectedText = currentProduct.ProductPrice.ToString();
+            currentOfflineOrderDetail.UnitPrice = currentProduct.ProductPrice;
+           
+        }
+
+        private void TxtQuantity_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            currentOfflineOrderDetail.Quantity = Convert.ToInt32(txtQuantity.Text);
+            txtTotalPrice.SelectedText = (currentOfflineOrderDetail.UnitPrice * currentOfflineOrderDetail.Quantity).ToString();
+            currentOfflineOrderDetail.TotalPrice = Convert.ToDouble(txtTotalPrice.SelectedText);
+            currentOfflineOrderDetail.ProductID = currentProduct.ProductID;
+            currentOfflineOrderDetail.ProductName = currentProduct.ProductName;
+            currentOfflineOrderDetail.OfflineOrderID = offlineOrderGuid;
+           
+           
+        }
+
+        private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            await offlineOrderDetailBL.AddOfflineOrderDetailBL(currentOfflineOrderDetail);
+            MessageBox.Show("Order Detail Added ");
+           
+        }
+
+    }
+}
