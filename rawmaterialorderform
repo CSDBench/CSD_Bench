@@ -1,0 +1,44 @@
+<Window x:Class="InventoryWPFproject.RawMaterialOrder"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InventoryWPFproject"
+        mc:Ignorable="d"
+        Title="RawMaterialOrder" Height="450" Width="800">
+    <Grid Background="Bisque">
+        <TabControl HorizontalAlignment="Left" Height="303" Margin="10,62,0,0" VerticalAlignment="Top" Width="721" SelectionChanged="TabControl_SelectionChanged">
+            <TabItem Header="View Raw Material Order">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Add Raw Material Order">
+                <Grid Background="Beige">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="87*"/>
+                        <ColumnDefinition Width="628*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox  x:Name="RawMaterialCode" Grid.Column="1" HorizontalAlignment="Left" Margin="55,36,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="OrderNumber_SelectionChanged"/>
+                    <ComboBox  x:Name="SupplierID" Grid.Column="1" HorizontalAlignment="Left" Margin="498,36,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="SupplierID_SelectionChanged"/>
+
+                    <TextBox x:Name="RawMaterialTotalQuantity" HorizontalAlignment="Left" Height="23" Margin="66,133,0,0" TextWrapping="Wrap" Text="raw material quantity" VerticalAlignment="Top" Width="133" Grid.ColumnSpan="2" TextChanged="QuantityOfReturn1_TextChanged"/>
+                    
+                    <TextBox  x:Name="ReturnAmount1"  Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="431,133,0,0" TextWrapping="Wrap" Text="Raw material total price" VerticalAlignment="Top" Width="145" TextChanged="ReturnAmount1_TextChanged"/>
+                    <Label x:Name="TotalQuantity" Content="Quantity Of Raw Material" HorizontalAlignment="Left" Margin="66,102,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="167"/>
+                   
+                    <Label x:Name="ReturnAmount" Content="total price of order" Grid.Column="1" HorizontalAlignment="Left" Margin="431,102,0,0" VerticalAlignment="Top" Height="26" Width="145"/>
+                    <Label  x:Name="EnterRawMaterialCode" Content=" raw material code" HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" Width="127" Grid.ColumnSpan="2"/>
+                    <Label  x:Name="SelectPurposeOfReturn" Content="Select Purpose Of Return" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="76,222,0,0" Width="202"/>
+                    <Label  x:Name="EnterSupplierID" Content="Enter Supplier ID" Grid.Column="1" HorizontalAlignment="Left" Margin="367,40,0,0" VerticalAlignment="Top"/>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Label FontWeight="Bold" FontSize="24" Content="Raw Material Order" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="302,20,0,0"/>
+        <Button x:Name="Reset" Content="Reset" HorizontalAlignment="Left" Margin="634,47,0,0" VerticalAlignment="Top" Width="75" Click="Reset_Click"/>
+        <Button x:Name="PlaceOrder" Content="place order" HorizontalAlignment="Left" Margin="492,370,0,0" VerticalAlignment="Top" Width="217" Click="PlaceOrder_Click"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="100" Margin="-172,358,0,-39" VerticalAlignment="Top" Width="100"/>
+
+
+    </Grid>
+</Window>
