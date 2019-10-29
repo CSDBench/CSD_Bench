@@ -1,0 +1,129 @@
+using System.Collections.Generic;
+using System.Web.Mvc;
+using Capgemini.Inventory.BusinessLayer;
+using Inventory.Mvc.Models;
+using Capgemini.Inventory.Entities;
+using System;
+
+namespace Inventory.Mvc.Controllers
+{
+    // Developed by Ritwik Sinha (Group 4)
+    // Creation Date : 2019/10/24
+    // Last Modified Date : 
+    public class  RawMaterialOrderController : Controller
+    {
+        private readonly object rawMaterialOrderViewModel;
+
+        // GET: RawMaterialOrder
+        // URL : RawMaterialOrder/Create
+        public async System.Threading.Tasks.Task<ActionResult> CreateAsync()
+        {
+            RawMaterialBL rawMaterialBL = new RawMaterialBL();
+            SupplierBL supplierBL = new SupplierBL();
+            List<RawMaterial> rawMaterials = await rawMaterialBL.GetAllRawMaterialsBL();
+            List<Supplier> suppliers = await supplierBL.GetAllSuppliersBL();
+
+            ViewBag.list1 = new SelectList(rawMaterials, "RawMaterialName");
+            ViewBag.list2 = new SelectList(suppliers, "SupplierName");
+            //Creating and initializing viewmodel object
+            RawMaterialOrderViewModel rawMaterialOrderViewModel = new RawMaterialOrderViewModel();
+            //Calling view and passing viewmodel object to view
+            return View(rawMaterialOrderViewModel);
+        }
+
+        public async System.Threading.Tasks.Task<ActionResult> CreateAsync(RawMaterialOrderViewModel rawMaterialOrderModel)
+        {
+            //Create object of PersonsBL
+            RawMaterialOrderBL rawMaterialOrderBL = new RawMaterialOrderBL();
+            RawMaterialBL rawMaterialBL = new RawMaterialBL();
+            SupplierBL supplierBL = new SupplierBL();
+
+            //Creating object of Person EntityModel
+            RawMaterialOrder rawMaterialOrder = new RawMaterialOrder();
+            RawMaterial rawMaterial = new RawMaterial();
+            Supplier supplier = new Supplier();
+
+            rawMaterial.RawMaterialName = rawMaterialOrderModel.RawMaterialName;
+            supplier.SupplierName = rawMaterialOrderModel.SupplierName;
+            rawMaterialOrder.RawMaterialTotalPrice = rawMaterialOrderModel.RawMaterialTotalQuantity;
+            rawMaterialOrder.RawMaterialTotalQuantity = rawMaterialOrderModel.RawMaterialTotalPrice;
+
+            //person.PersonName = personVM.PersonName;
+            //person.Email = personVM.Email;
+            //person.Age = personVM.Age;
+
+            //Invoke the AddPerson method BL
+            (bool isAdded, System.Guid id) = await rawMaterialOrderBL.AddRawMaterialOrderBL(rawMaterialOrder);
+            if (isAdded)
+            {
+                //Go to Index action method of Persons Controller
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                //Return plain html / plain string
+                return Content("Raw Material Order not added");
+            }
+        }
+
+        public  async System.Threading.Tasks.Task<ActionResult> IndexAsync(RawMaterialOrderViewModel rawMaterialOrderModel)
+        {
+            //Creating object of PersonsBL
+            RawMaterialOrderBL rawMaterialOrderBL = new RawMaterialOrderBL();
+
+            RawMaterialBL rawMaterialBL = new RawMaterialBL();
+            List<RawMaterial> rawMaterials = await rawMaterialBL.GetAllRawMaterialsBL();
+            ViewBag.list1 = new SelectList(rawMaterials, "RawMaterialName");
+
+            //Getting list of persons from PersonsBL
+            List<RawMaterialOrder> rawMaterialOrders = rawMaterialOrderBL.GetAllRawMaterialOrdersBL();
+
+            //Create an empty collection of PersonViewModel
+            List<RawMaterialOrderViewModel> rawMaterialOrderViewModel = new List<RawMaterialOrderViewModel>();
+
+            //Migrate (copy) data from EntityModel collection to ViewModel collection
+            foreach (var item in rawMaterialOrders)
+            {
+                RawMaterialOrderViewModel rawMaterialOrderVM = new RawMaterialOrderViewModel() { RawMaterialOrderID = item.RawMaterialOrderID, RawMaterialTotalPrice = item.RawMaterialTotalPrice, RawMaterialTotalQuantity = item.RawMaterialTotalQuantity};
+                rawMaterialOrderViewModel.Add(rawMaterialOrderVM);
+            }
+
+            //Call view & pass personVM collection to view
+            return View(rawMaterialOrderViewModel);
+        }
+
+        
+        // URL: Persons/Edit
+        public async System.Threading.Tasks.Task<ActionResult> EditAsync(System.Guid id)
+        {
+            
+            // person = personBL.GetPersonByPersonID(id);
+
+
+            //Creating object of Person into PersonViewModel
+            RawMaterialOrderViewModel rawMaterialOrderViewModel = new RawMaterialOrderViewModel();
+            RawMaterialOrderBL rawMaterialOrderBL = new RawMaterialOrderBL();
+            RawMaterialBL rawMaterialBL = new RawMaterialBL();
+            SupplierBL supplierBL = new SupplierBL();
+
+            //Creating object of Person EntityModel
+            RawMaterialOrder rawMaterialOrder = new RawMaterialOrder();
+            RawMaterial rawMaterial = new RawMaterial();
+            Supplier supplier = new Supplier();
+             rawMaterialOrder = await rawMaterialOrderBL.GetAllRawMaterialOrdersBL(id);
+
+            rawMaterial.RawMaterialName = rawMaterialOrderViewModel.RawMaterialName;
+            supplier.SupplierName = rawMaterialOrderViewModel.SupplierName;
+            rawMaterialOrder.RawMaterialTotalPrice = rawMaterialOrderViewModel.RawMaterialTotalPrice;
+            rawMaterialOrder.RawMaterialTotalQuantity = rawMaterialOrderViewModel.RawMaterialTotalQuantity;
+
+            //Getting list of persons from PersonsBL
+            List<RawMaterialOrder> rawMaterialOrders = rawMaterialOrderBL.GetAllRawMaterialOrdersBL();
+
+            //Add Persons to ViewBag
+            ViewBag.PersonsList = new SelectList(rawMaterialOrders, "PersonID", "PersonName");
+
+            return View(rawMaterialOrderViewModel);
+        }
+    }
+}
