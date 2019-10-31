@@ -1,0 +1,174 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Capgemini.Inventory.Contracts.DALContracts;
+using Inventory.Entities;
+using System.Data.SqlClient;
+using System.Data;
+
+namespace Capgemini.Inventory.DataAccessLayer
+{
+    // Developed by Ritwik Sinha (Group 4)
+    // Creation Date : 2019/09/22
+    // Last Modified Date : 2019/10/16
+    public class RawMaterialorderDAL : RawMaterialOrderDALBase
+    {
+        /// <summary>
+        /// Method to add product order
+        /// </summary>
+        /// <param name="newproductOrder"></param>
+        /// <returns></returns>
+        public override (bool, Guid) AddRawMaterialOrderDAL(Rawmaterialorder rawmaterialorder)
+        {
+
+            bool isAdded = false;
+            Guid id = default(Guid);
+            rawmaterialorder.CreationDateTime = DateTime.Now;
+            rawmaterialorder.LastmodifiedDateTime = DateTime.Now;
+           
+          
+            try
+            {
+
+                using (Entities db = new Entities())
+                {
+                    rawmaterialorder.RawMaterialOrderID = Guid.NewGuid();
+                    int n = db.AddRawmaterialOrder(rawmaterialorder.CreationDateTime, rawmaterialorder.LastmodifiedDateTime, rawmaterialorder.RawMaterialOrderID,  rawmaterialorder.SupplierID, rawmaterialorder.RawMaterialTotalQuantity, rawmaterialorder.RawMaterialTotalPrice);
+
+
+                    if (n > 0)
+                    {
+                        isAdded = true;
+                        id = rawmaterialorder.RawMaterialOrderID;
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return (isAdded, id);
+        }
+        public override List<Rawmaterialorder> GetAllRawMaterialOrdersDAL()
+        {
+            List<Rawmaterialorder> rawmaterialorders = null;
+            try
+            {
+                using (Entities db = new Entities())
+                {
+                    rawmaterialorders = new List<Rawmaterialorder>();
+                    rawmaterialorders = db.Rawmaterialorders.ToList();
+
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return rawmaterialorders;
+        }
+
+
+
+        public override (Rawmaterialorder, Guid) GetRawMaterialOrderByRawMaterialOrderIDDAL(Guid RawMaterialorderID)
+
+        {
+            Rawmaterialorder rawMaterialOrder = null;
+            Guid id = new Guid();
+            try
+            {
+                SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbCon);
+                sqlConn.Open();
+                string query = "view order by RawMaterialOrderID (@RawMaterialOrderID)";
+                SqlCommand sqlCmd = new SqlCommand(query);
+                sqlCmd.Connection = sqlConn;
+                sqlCmd.Parameters.AddWithValue("@RawMaterialOrderID", RawMaterialorderID);
+                SqlDataReader sqlDataReader = sqlCmd.ExecuteReader();
+
+                while (sqlDataReader.Read())
+                {
+                    rawMaterialOrder.CreationDateTime = sqlDataReader.GetDateTime(0);
+
+
+                }
+                sqlDataReader.Close();
+                sqlConn.Close();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return (rawMaterialOrder, id);
+        }
+        public override (bool, Guid) UpdateRawMaterialOrderDAL(Rawmaterialorder updateRawMaterialOrder)
+        {
+            bool RawMaterialorderUpdated = false;
+            Guid id = new Guid();
+            try
+            {
+
+                Rawmaterialorder matchingRawMaterialOrder = GetRawMaterialOrderByRawMaterialOrderIDDAL(updateRawMaterialOrder.RawMaterialOrderID).Item1;
+
+                if (matchingRawMaterialOrder != null)
+                {
+
+                    matchingRawMaterialOrder = updateRawMaterialOrder;
+                    matchingRawMaterialOrder.LastmodifiedDateTime = DateTime.Now;
+
+                    RawMaterialorderUpdated = true;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return (RawMaterialorderUpdated, id);
+        }
+        public override (bool, Guid) DeleteRawMaterialOrderDAL(Guid deleteRawMaterialOrderID)
+        {
+            bool OrderDeleted = false;
+            Guid id = new Guid();
+            try
+            {
+                using (Entities db = new Entities())
+                {
+                    Rawmaterialorder rawmaterialorder = db.Rawmaterialorders.Where(temp => temp.RawMaterialOrderID == deleteRawMaterialOrderID).FirstOrDefault();
+
+                    if (rawmaterialorder == null)
+                    {
+                        OrderDeleted = false;
+                    }
+                    else
+                    {
+                        db.Rawmaterialorders.Remove(rawmaterialorder);
+                        db.SaveChanges();
+                        OrderDeleted = true;
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return (OrderDeleted,id);
+        }
+
+
+
+        public void Dispose()
+        {
+            //No unmanaged resources currently
+        }
+
+        public override List<Rawmaterialorder> GetRawMaterialOrdersByDateDAL(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
+
+       
+        
+    }
+}
