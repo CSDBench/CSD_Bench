@@ -1,0 +1,90 @@
+@model Inventory.Mvc.Models.RawMaterialOrderViewModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create Person</title>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/umd/popper.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <style>
+        .field-validation-error {
+            color: red;
+        }
+
+        .my-color {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h2>Edit Person</h2>
+
+        @using (Html.BeginForm("Edit", "RawMaterialOrder", FormMethod.Post))
+        {
+            @Html.HiddenFor(Model => Model.RawMaterialOrderID)
+            <div class="row">
+
+                <div class="col-md-6 mx-auto">
+
+                    <div class="form-group form-row">
+                        @Html.LabelFor(temp => temp.RawMaterialName,
+                            new { @class="col-form-label col-lg-3" })
+                        @Html.DropDownListFor(temp => temp.RawMaterialName, ViewBag.list1 as SelectList,
+                            new { @class = "form-control col-lg-9" })
+                    </div>
+
+                    <div class="form-group form-row">
+                        @Html.LabelFor(temp => temp.SupplierName,
+                            new { @class="col-form-label col-lg-3" })
+                        @Html.DropDownListFor(temp => temp.SupplierName, ViewBag.list1 as SelectList,
+                            new { @class = "form-control col-lg-9" })
+                    </div>
+
+                    <div class="form-group form-row">
+                        @Html.LabelFor(temp => temp.RawMaterialTotalQuantity, "quantity",
+                         new {@class="col-form-label col-lg-3" })
+
+                        <div class="col-lg-9">
+                            @Html.TextBoxFor(temp => temp.RawMaterialTotalQuantity,
+                            new{@class="form-control col-lg-9", placeholder = "quantity" })
+
+                            @Html.ValidationMessageFor(temp => temp.RawMaterialTotalQuantity)
+                        </div>
+                    </div>
+
+                    <div class="form-group form-row">
+                        @Html.LabelFor(temp => temp.RawMaterialTotalPrice, "Total Price",
+                         new {@class="col-form-label col-lg-3" })
+
+                        <div class="col-lg-9">
+                            @Html.TextBoxFor(temp => temp.RawMaterialTotalPrice,
+                            new{@class="form-control col-lg-9", placeholder = "Raw Material Price" })
+
+                            @Html.ValidationMessageFor(temp => temp.RawMaterialTotalPrice)
+                        </div>
+                    </div>
+
+                    <div class="border-top text-right pt-2">
+                        <a href="@Url.Action("Index", "RawMaterialOrder")" class="btn btn-secondary">Cancel</a>
+                        <button class="btn btn-success">Update</button>
+                        <button class="btn btn-success"
+                                formaction="@Url.Action("Delete", "RawMaterialOrder")"
+                                onclick="return confirm('Are you sure to delete')">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+</body>
+</html>
