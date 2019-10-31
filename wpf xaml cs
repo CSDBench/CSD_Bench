@@ -1,0 +1,158 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using Capgemini.Inventory.Entities;
+using Capgemini.Inventory.BusinessLayer;
+using Capgemini.Inventory.Exceptions;
+
+namespace Inventory.WPF1
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        SupplierBL supplierBL = new SupplierBL();
+        RawMaterial material = new RawMaterial();
+        Supplier supplier = new Supplier();
+        RawMaterialOrderBL rawMaterialOrderBL = new RawMaterialOrderBL();
+        RawMaterial rawMaterial = new RawMaterial();
+        RawMaterialBL rawMaterialBL = new RawMaterialBL();
+        List<RawMaterial> rawMaterials = new List<RawMaterial>();
+        List<Supplier> suppliers = new List<Supplier>();
+        RawMaterialOrder rawMaterialOrder = new RawMaterialOrder();
+
+
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+        
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private async void RawMaterialName_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MessageBox.Show(cmbRawMaterialName.SelectedValue.ToString());
+            rawMaterial.RawMaterialName = Convert.ToString(cmbRawMaterialName.SelectedValue);
+            material = await rawMaterialBL.GetRawMaterialByRawMaterialNameBL(rawMaterial.RawMaterialName);
+        }
+
+        private void SupplierName_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MessageBox.Show(cmbSupplierName.SelectedValue.ToString());
+        }
+
+        private void QuantityOfRawMaterialOrder_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            
+            if (RawMaterialTotalQuantity.Text == "")
+            {
+                MessageBox.Show("Enter a number in quantity");
+            } 
+
+            else 
+            {
+                rawMaterialOrder.RawMaterialOrderTotalQuantity = Convert.ToDouble(RawMaterialTotalQuantity.Text);
+                ////    //currentOfflineOrderDetail.Quantity = Convert.ToInt32(txtQuantity.Text);
+                ////    //txtTotalPrice.SelectedText = (currentOfflineOrderDetail.UnitPrice * currentOfflineOrderDetail.Quantity).ToString();
+                ////    //currentOfflineOrderDetail.TotalPrice = Convert.ToDouble(txtTotalPrice.SelectedText);
+                ////    //currentOfflineOrderDetail.ProductID = currentProduct.ProductID;
+                ////    //currentOfflineOrderDetail.ProductName = currentProduct.ProductName;
+                ////    //currentOfflineOrderDetail.OfflineOrderID = offlineOrderGuid;
+
+                ////    // rawMaterialBL.GetRawMaterialByRawMaterialNameBL
+                ////    ////double amt = material.RawMaterialPrice * rawMaterialOrder.RawMaterialOrderTotalQuantity;
+                ////    //totalprice.SelectedText =Convert.ToString(;
+                //totalprice.SelectedText = (material.RawMaterialPrice * rawMaterialOrder.RawMaterialOrderTotalQuantity).ToString();
+                //rawMaterialOrder.RawMaterialOrderTotalPrice = rawMaterial.RawMaterialPrice * rawMaterialOrder.RawMaterialOrderTotalQuantity ;
+
+
+            }
+            
+
+        }
+
+        private void PriceOfRawMaterial_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            rawMaterialOrder.RawMaterialOrderTotalPrice = Convert.ToDouble(totalprice.Text);
+        }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private async void PlaceOrder_Click(object sender, RoutedEventArgs e)
+        {
+            await rawMaterialOrderBL.AddRawMaterialOrderBL(rawMaterialOrder);
+            MessageBox.Show("Order Detail Added ");
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            suppliers = await supplierBL.GetAllSuppliersBL();
+            List<string> list = new List<string>();
+            //foreach
+            rawMaterials = await rawMaterialBL.GetAllRawMaterialsBL();
+            cmbSupplierName.ItemsSource = suppliers;
+            List<RawMaterialOrder> rawMaterialOrders = new List<RawMaterialOrder>();
+            try
+            {
+                using (RawMaterialOrderBL rawMaterialOrderBL = new RawMaterialOrderBL())
+                {
+                    rawMaterialOrders = await rawMaterialOrderBL.GetAllRawMaterialOrdersBL();
+                    if (rawMaterialOrders.Count > 0)
+                    {
+                        txtdatagrid.ItemsSource = rawMaterialOrders;
+                       
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogger.LogException(ex);
+                MessageBox.Show(ex.Message);
+            }
+            cmbRawMaterialName.ItemsSource  = rawMaterials;
+            //cmbSupplierName.DisplayMemberPath = "Supplier ID";
+            cmbSupplierName.DisplayMemberPath = "SupplierName";
+            cmbSupplierName.SelectedValuePath = "SupplierName";
+            cmbRawMaterialName.DisplayMemberPath = "RawMaterialName";
+            cmbRawMaterialName.SelectedValuePath = "RawMaterialName";
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            totalprice.SelectedText = (material.RawMaterialPrice * rawMaterialOrder.RawMaterialOrderTotalQuantity).ToString();
+        }
+
+        private void Txtdatagrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+    }
+}
