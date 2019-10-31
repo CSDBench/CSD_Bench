@@ -1,0 +1,202 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Capgemini.Inventory.Contracts.DALContracts;
+using Capgemini.Inventory.Entities;
+using Capgemini.Inventory.Helpers;
+using System.Data.SqlClient;
+using System.Data;
+
+namespace Capgemini.Inventory.DataAccessLayer
+{
+    public class RawMaterialOrderDAL : RawMaterialOrderDALBase
+    {
+        /// <returns>Determinates whether the new systemUser is added.</returns>
+        
+
+        public override (bool,Guid) AddRawMaterialOrderDAL(RawMaterialOrder rawMaterialOrder)
+        {
+            SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbCon);
+
+            bool RawMaterialorderAdded = false;
+            Guid id = new Guid();
+            try
+            {
+                Supplier supplier = new Supplier();
+                RawMaterial rawMaterial = new RawMaterial();
+                
+                rawMaterialOrder.RawMaterialOrderID = Guid.NewGuid();
+                rawMaterialOrder.CreationDateTime = DateTime.Now;
+                rawMaterialOrder.LastmodifiedDateTime = DateTime.Now;
+                
+                RawMaterialorderAdded = true;
+                RawMaterialorderList.Add(rawMaterialOrder);
+                string query = "Team_D.AddRawMaterialOrder";
+                SqlCommand sqlCmd = new SqlCommand(query, sqlConn);
+                sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter p1 = new SqlParameter("@CreationDateTime", rawMaterialOrder.CreationDateTime);
+                SqlParameter p2 = new SqlParameter("@LastmodifiedDateTime", rawMaterialOrder.LastmodifiedDateTime);
+                SqlParameter p3 = new SqlParameter("@RawMaterialOrderID", rawMaterialOrder.RawMaterialOrderID);
+                p3.DbType = DbType.Guid;
+                SqlParameter p4 = new SqlParameter("@SupplierID", rawMaterialOrder.SupplierID);
+                p4.DbType = DbType.Guid;
+                SqlParameter p5 = new SqlParameter("@RawMaterialOrderTotalPrice", rawMaterialOrder.RawMaterialOrderTotalPrice);
+                SqlParameter p6 = new SqlParameter("@RawMaterialOrderTotalQuantity", rawMaterialOrder.RawMaterialOrderTotalQuantity);
+                sqlCmd.Parameters.Add(p1);
+                sqlCmd.Parameters.Add(p2);
+                sqlCmd.Parameters.Add(p3);
+                sqlCmd.Parameters.Add(p4);
+                sqlCmd.Parameters.Add(p5);
+                sqlCmd.Parameters.Add(p6);
+               
+                sqlConn.Open();
+                sqlCmd.ExecuteNonQuery();
+                sqlConn.Close();
+
+                RawMaterialorderAdded = true;
+                id = rawMaterialOrder.RawMaterialOrderID;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return (RawMaterialorderAdded,id);
+        }
+        public override List<RawMaterialOrder> GetAllRawMaterialOrdersDAL()
+        {
+            try
+            {
+                List<RawMaterialOrder> newRawMaterialOrder = new List<RawMaterialOrder>();
+                SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbCon);
+
+                string query = "Team_D.GetAllRawMaterialOrder";
+                SqlCommand sqlCmd = new SqlCommand(query, sqlConn);
+                sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                DataSet dataSet = new DataSet();
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                sqlDataAdapter.SelectCommand = sqlCmd;
+                sqlDataAdapter.Fill(dataSet);
+                DataRow dataRow;
+
+                for (int i=0; i < dataSet.Tables[0].Rows.Count; i++)
+                {
+                    dataRow = dataSet.Tables[0].Rows[i];
+                    RawMaterialOrder rawMaterialOrder = new RawMaterialOrder();
+                    rawMaterialOrder.CreationDateTime = Convert.ToDateTime(dataRow["CreationDateTime"]);
+                    rawMaterialOrder.LastmodifiedDateTime = Convert.ToDateTime(dataRow["LastModifiedDateTime"]);
+                    rawMaterialOrder.RawMaterialOrderID = (Guid)dataRow["RawMaterialOrderID"];
+                    rawMaterialOrder.SupplierID = (Guid)dataRow["SupplierID"];
+
+
+                    rawMaterialOrder.RawMaterialOrderTotalPrice = Convert.ToDouble(dataRow["RawMaterialTotalPrice"]);
+                    rawMaterialOrder.RawMaterialOrderTotalQuantity = Convert.ToDouble(dataRow["RawMaterialTotalQuantity"]);
+                    newRawMaterialOrder.Add(rawMaterialOrder);
+                }
+
+
+            
+            return newRawMaterialOrder;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        
+
+        public override (RawMaterialOrder,Guid) GetRawMaterialOrderByRawMaterialOrderIDDAL(Guid RawMaterialorderID)
+
+        {
+            RawMaterialOrder rawMaterialOrder = null;
+            Guid id = new Guid();
+            try
+            {
+                SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbCon);
+                sqlConn.Open();
+                string query = "view order by RawMaterialOrderID (@RawMaterialOrderID)";
+                SqlCommand sqlCmd = new SqlCommand(query);
+                sqlCmd.Connection = sqlConn;
+                sqlCmd.Parameters.AddWithValue("@RawMaterialOrderID", RawMaterialorderID);
+                SqlDataReader sqlDataReader = sqlCmd.ExecuteReader();
+
+                while (sqlDataReader.Read())
+                {
+                    rawMaterialOrder.CreationDateTime = sqlDataReader.GetDateTime(0);
+
+
+                }
+                sqlDataReader.Close();
+                sqlConn.Close();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return (rawMaterialOrder,id);
+        }
+        public override (bool,Guid) UpdateRawMaterialOrderDAL(RawMaterialOrder updateRawMaterialOrder)
+        {
+            bool RawMaterialorderUpdated = false;
+            Guid id = new Guid();
+            try
+            {
+
+                RawMaterialOrder matchingRawMaterialOrder = GetRawMaterialOrderByRawMaterialOrderIDDAL(updateRawMaterialOrder.RawMaterialOrderID).Item1;
+
+                if (matchingRawMaterialOrder != null)
+                {
+
+                    matchingRawMaterialOrder = updateRawMaterialOrder;
+                    matchingRawMaterialOrder.LastmodifiedDateTime = DateTime.Now;
+
+                    RawMaterialorderUpdated = true;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return (RawMaterialorderUpdated,id);
+        }
+        public override (bool,Guid) DeleteRawMaterialOrderDAL(Guid deleteRawMaterialOrderID)
+        {
+            bool RawMaterialOrderDeleted = false;
+            Guid id = new Guid();
+            try
+            {
+                RawMaterialOrder rawMaterialOrder = new RawMaterialOrder();
+                SqlConnection sqlConn = new SqlConnection(Properties.Settings.Default.dbCon);
+                SqlCommand sqlCommand = new SqlCommand("Team_D.DeleteRawMaterialOrder", sqlConn);
+                sqlCommand.CommandType = CommandType.StoredProcedure;
+                sqlCommand.Parameters.AddWithValue("@RawMaterialOrderID", deleteRawMaterialOrderID);
+                sqlConn.Open();
+                sqlCommand.ExecuteNonQuery();
+                sqlConn.Close();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+           
+            return (RawMaterialOrderDeleted,id);
+        }
+        
+        public void Dispose()
+        {
+            //No unmanaged resources currently
+        }
+    
+        public override List<RawMaterialOrder> GetRawMaterialOrdersByDateDAL(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
