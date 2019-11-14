@@ -1,0 +1,65 @@
+using Capgemini.Inventory.BusinessLayer;
+using Inventory.Entities;
+using Inventory.Mvc.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Http;
+
+namespace Inventory.MVC.ApiControllers
+{
+
+    /// <summary>
+    /// Product Orders Api controller
+    /// </summary>
+    public class RawMaterialOrderController : ApiController
+    {
+        private RawMaterialOrderBL rawMaterialOrderBL;
+
+        /// <summary>
+        /// constructor that creates objects object of Business layer
+        /// </summary>
+        public RawMaterialOrderController()
+        {
+            rawMaterialOrderBL = new RawMaterialOrderBL();
+        }
+
+        /// <summary>
+        /// Method to get all the rawmaterial orders
+        /// </summary>
+        /// <returns></returns>
+        // api/rawMaterialorder
+        public async Task<List<RawMaterialOrderViewModel>> GetRawMaterialOrders()
+        {
+            //getting the product orders list by calling business layer function
+            List<Rawmaterialorder1> rawmaterialorder1s = await this.rawMaterialOrderBL.GetAllRawMaterialOrdersBL();
+            //reference variable for view model
+            RawMaterialOrderViewModel rawMaterialOrderViewModel;
+            //creating the list of view model
+            List<RawMaterialOrderViewModel> rawMaterialOrderViewModels = new List<RawMaterialOrderViewModel>();
+            foreach (var item in rawmaterialorder1s)
+            {
+                //copying the data into view model object.
+                rawMaterialOrderViewModel = new RawMaterialOrderViewModel()
+                {
+                    
+                    RawMaterialOrderID = item.RawMaterialOrderID,
+                    SupplierName = item.Supplier.SupplierName,
+                    RawMaterialTotalQuantity = Convert.ToDouble(item.RawMaterialTotalQuantity),
+                    RawMaterialTotalPrice = Convert.ToDouble(item.RawMaterialTotalPrice),
+                   };
+                //adding the view model object to list
+                rawMaterialOrderViewModels.Add(rawMaterialOrderViewModel);
+
+            }
+            //returning the list
+            return rawMaterialOrderViewModels;
+        }
+
+
+    }
+}
