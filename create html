@@ -1,0 +1,65 @@
+
+@model Inventory.Mvc.Models.RawMaterialOrderViewModel
+
+@{
+    Layout = "~/Views/Shared/SystemUserLayout.cshtml";
+}
+<div class="container-fluid">
+    <div class="mx-auto" , bg="blue">
+        <h2>Create Raw Material Order</h2>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        <div class="row">
+
+            <div class="col-md-6 mx-auto border-secondary">
+
+                <div class="form-group form-row">
+                    @Html.LabelFor(temp => temp.RawMaterialName,
+                        new { @class = "col-form-label col-lg-4" })
+                    @Html.DropDownListFor(temp => temp.RawMaterialName, ViewBag.list1 as SelectList,
+                        new { @class = "form-control col-lg-8" })
+                </div>
+
+                <div class="form-group form-row">
+                    @Html.LabelFor(temp => temp.SupplierName,
+                        new { @class = "col-form-label col-lg-4" })
+                    @Html.DropDownListFor(temp => temp.SupplierID, ViewBag.list2 as SelectList,
+                        new { @class = "form-control col-lg-8" })
+                </div>
+
+                <div class="form-group form-row">
+                    @Html.LabelFor(temp => temp.RawMaterialTotalQuantity, "quantity",
+                     new { @class = "col-form-label col-lg-4" })
+
+                    <div class="col-lg-8">
+                        @Html.TextBoxFor(temp => temp.RawMaterialTotalQuantity,
+                        new { @class = "form-control col-lg-8", placeholder = "quantity" })
+
+                        @Html.ValidationMessageFor(temp => temp.RawMaterialTotalQuantity)
+                    </div>
+                </div>
+
+                <div class="form-group form-row">
+                    @Html.LabelFor(temp => temp.RawMaterialTotalPrice, "Total Price",
+                     new { @class = "col-form-label col-lg-4" })
+
+                    <div class="col-lg-8">
+                        @Html.TextBoxFor(temp => temp.RawMaterialTotalPrice,
+                        new { @class = "form-control col-lg-8", placeholder = "Raw Material Price" })
+
+                        @Html.ValidationMessageFor(temp => temp.RawMaterialTotalPrice)
+                    </div>
+                </div>
+
+                <div class="border-top text-right pt-2">
+                    <button class="btn btn-success" formaction="@Url.Action("Create", "RawMaterialOrder")"
+                           onclick="return confirm('Are you confirm to add')"  >Submit</button>
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
