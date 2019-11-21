@@ -1,0 +1,32 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.ComponentModel.DataAnnotations;
+
+namespace Inventory.Mvc.Models
+{
+    // Developed by Ritwik Sinha (Group 4)
+    // Creation Date : 2019/10/24
+    // Last Modified Date : 2019/10/25
+
+    public class RawMaterialOrderViewModel
+    {
+        //Properties
+        public System.Guid RawMaterialOrderID { get; set; }
+
+        [Required(ErrorMessage = "Raw Material Name can't be blank")]
+        public string RawMaterialName { get; set; }
+
+        public Guid SupplierID { get; set; }
+
+        [Required(ErrorMessage = "Quantity can't be blank")]
+        [Range(0.99, 100000, ErrorMessage = "Quantity should be between 1 and 100000")]
+        public double RawMaterialTotalQuantity { get; set; }
+
+        [Required(ErrorMessage = "Price can't be blank")]
+        [Range(0.99, 100000, ErrorMessage = "Price should be between 1 and 100000")]
+        public double RawMaterialTotalPrice { get; set; }
+        public string SupplierName { get;  set; }
+    }
+}
