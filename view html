@@ -1,0 +1,44 @@
+@model List<Inventory.Mvc.Models.RawMaterialOrderViewModel>
+
+@{
+    Layout = "~/Views/Shared/SystemUserLayout.cshtml";
+}
+
+<h3>RawMaterialOrder</h3>
+<table id="table1" class="table">
+    <thead>
+        <tr>
+            <th>RawMaterialName</th>
+            <th>SupplierName</th>
+            <th>RawMaterialTotalQuantity</th>
+            <th>RawMaterialTotalPrice</th>
+            <th>Actions</th>
+        </tr>
+
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.RawMaterialOrderID</td>
+                <td>@item.SupplierName</td>
+                <td>@item.RawMaterialTotalQuantity</td>
+                <td>@item.RawMaterialTotalPrice</td>
+                <td>
+                    <a href="@Url.Action("Delete", "RawMaterialOrder",new { id =item.RawMaterialOrderID})"
+                        onclick="return confirm('Are you confirm to delete')">Delete</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+@*<a href="@Url.Action("Create", "Persons")">Add New Person</a>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#table1').DataTable();
+    });
+</script>
