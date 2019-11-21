@@ -1,0 +1,172 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Capgemini.Inventory.Contracts.BLContracts;
+using Capgemini.Inventory.Contracts.DALContracts;
+using Capgemini.Inventory.DataAccessLayer;
+using Inventory.Entities;
+using Capgemini.Inventory.Helpers;
+using Capgemini.Inventory.Exceptions;
+
+namespace Capgemini.Inventory.BusinessLayer
+{
+    // Developed by Ritwik Sinha (Group 4)
+    // Creation Date : 2019/09/22
+    // Last Modified Date : 2019/10/01
+
+    /// <summary>
+    /// Contains data access layer methods for inserting, updating, deleting RawMaterialOrders from RawMaterialOrder's collection.
+    /// </summary>
+    public class RawMaterialOrderBL : BLBase<Rawmaterialorder1>, IRawMaterialOrderBL, IDisposable
+
+    {
+        //fields
+        RawMaterialOrderDALBase RawMaterialorderDAL;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public RawMaterialOrderBL()
+        {
+            this.RawMaterialorderDAL = new RawMaterialorderDAL();
+        }
+        public async Task<bool> ValidateRawMaterialOrder(Rawmaterialorder1 RawMaterialOrder) //method to validate RawMaterial order
+        {
+            StringBuilder sb = new StringBuilder();
+            bool validRawMaterial = await base.Validate(RawMaterialOrder);
+
+
+            DateTime now = DateTime.Now;
+
+            if (RawMaterialOrder.RawMaterialTotalPrice < 0)
+            {
+                validRawMaterial = false;
+                sb.Append(Environment.NewLine + $"price should be greater than 0.0");
+
+            }
+            if (validRawMaterial == false)
+                throw new InventoryException(sb.ToString());
+            return validRawMaterial;
+
+        }
+
+        public async Task<(bool, Guid)> AddRawMaterialOrderBL(Rawmaterialorder1 RawMaterialOrder)
+        {
+            bool RawMaterialorderAdded = false;
+            Guid id = new Guid();
+            try
+            {
+                if (await Validate(RawMaterialOrder))
+                {
+                    await Task.Run(() =>
+                    {
+                        (RawMaterialorderAdded ,id)=this.RawMaterialorderDAL.AddRawMaterialOrderDAL(RawMaterialOrder);
+                      
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return (RawMaterialorderAdded, id);
+        }
+
+        public async Task<List<Rawmaterialorder1>> GetAllRawMaterialOrdersBL()
+        {
+            List<Rawmaterialorder1> RawMaterialordersList = null;
+            try
+            {
+                await Task.Run(() =>
+                {
+                    RawMaterialordersList = RawMaterialorderDAL.GetAllRawMaterialOrdersDAL();
+                });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return RawMaterialordersList;
+        }
+        public async Task<(Rawmaterialorder1, Guid)> GetRawMaterialOrderByRawMaterialOrderIDBL(Guid RawMaterialorderID)
+        {
+            Rawmaterialorder1 matchingRawMaterialOrder = null;
+            Guid id = new Guid();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    matchingRawMaterialOrder = RawMaterialorderDAL.GetRawMaterialOrderByRawMaterialOrderIDDAL(RawMaterialorderID).Item1;
+                });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return (matchingRawMaterialOrder, id);
+        }
+        public async Task<(bool, Guid)> UpdateRawMaterialOrderBL(Rawmaterialorder1 updateRawMaterialOrder)
+        {
+            bool RawMaterialorderUpdated = false;
+            Guid id = new Guid();
+            try
+            {
+                if ((await Validate(updateRawMaterialOrder)) && ((await GetRawMaterialOrderByRawMaterialOrderIDBL(updateRawMaterialOrder.SupplierID)).Item1) != null)
+                {
+                    this.RawMaterialorderDAL.UpdateRawMaterialOrderDAL(updateRawMaterialOrder);
+                    RawMaterialorderUpdated = true;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return (RawMaterialorderUpdated, id);
+        }
+        public async Task<(bool, Guid)> DeleteRawMaterialOrderBL(Guid deleteRawMaterialOrderID)
+        {
+            bool RawMaterialOrderDeleted = false;
+            Guid id = new Guid();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    RawMaterialOrderDeleted = RawMaterialorderDAL.DeleteRawMaterialOrderDAL(deleteRawMaterialOrderID).Item1;
+                });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return (RawMaterialOrderDeleted, id);
+        }
+        public async Task<List<Rawmaterialorder1>> GetRawMaterialOrderByRawMaterialOrderDateDBL(DateTime RawMaterialorderDate)
+        {
+            List<Rawmaterialorder1> matchingRawMaterialOrder = new List<Rawmaterialorder1>();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    matchingRawMaterialOrder = RawMaterialorderDAL.GetRawMaterialOrdersByDateDAL(RawMaterialorderDate);
+                });
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return matchingRawMaterialOrder;
+        }
+
+        public void Dispose()
+        {
+            ((RawMaterialorderDAL)RawMaterialorderDAL).Dispose();
+        }
+
+
+    }
+
+}
